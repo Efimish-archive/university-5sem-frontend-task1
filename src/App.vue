@@ -1,6 +1,28 @@
-<script setup>
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+
 import BudgetForm from './BudgetForm.vue'
 import BudgetTable from './BudgetTable.vue'
+
+const transactions = ref(JSON.parse(localStorage.getItem('transactions')) ?? [])
+
+watch(
+  transactions,
+  async (newTransactions) => {
+    localStorage.setItem('transactions', JSON.stringify(newTransactions))
+  },
+  {
+    deep: true,
+  },
+)
+
+function add(transation) {
+  transactions.value.push(transation)
+}
+
+function remove(id) {
+  transactions.value = transactions.value.filter((transation) => transation.id !== id)
+}
 </script>
 
 <template>
@@ -8,8 +30,8 @@ import BudgetTable from './BudgetTable.vue'
     <h1 class="text-3xl font-bold mb-6 text-center">Калькулятор бюджета</h1>
 
     <div class="max-w-3xl mx-auto space-y-8">
-      <BudgetForm />
-      <BudgetTable />
+      <BudgetForm @add="add" />
+      <BudgetTable :transactions="transactions" @remove="remove" />
     </div>
   </div>
 </template>
