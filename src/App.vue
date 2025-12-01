@@ -8,7 +8,7 @@ const transactions = ref(JSON.parse(localStorage.getItem('transactions')) ?? [])
 
 watch(
   transactions,
-  async (newTransactions) => {
+  (newTransactions) => {
     localStorage.setItem('transactions', JSON.stringify(newTransactions))
   },
   {
